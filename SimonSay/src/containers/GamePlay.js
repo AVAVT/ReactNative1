@@ -6,7 +6,7 @@ import {
   Button
 } from 'react-native';
 
-import ColorButton from "./components/ColorButton";
+import ColorButton from "../components/ColorButton";
 
 export default class GamePlay extends Component {
   state = {
@@ -16,11 +16,13 @@ export default class GamePlay extends Component {
   }
 
   _onPress = (input) => {
-    const {targetInput, userInputIndex, score} = this.state;
-    
-    input === targetInput[userInputIndex]
-      && this.setState({
-        score: score + 1,
+    const { targetInput, userInputIndex, score } = this.state;
+
+    input !== targetInput[userInputIndex]
+      ? this.props.onGameOver(this.state.score)
+    : userInputIndex === targetInput.length - 1
+      ? this._toNextLevel(this.state.score + 1)
+      : this.setState({
         userInputIndex: userInputIndex + 1
       });
   }
@@ -29,10 +31,20 @@ export default class GamePlay extends Component {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
-  componentDidMount() {
+  _toNextLevel = (score) => {
     this.setState({
-      targetInput: Array.from({ length: 6 }, item => this._randomInt(0, 4))
+      score,
+      userInputIndex: 0,
+      targetInput: this._nextLevel(this.state.targetInput)
     })
+  }
+
+  _nextLevel = (targetInput) => {
+    return targetInput.concat(this._randomInt(0, 4));
+  }
+
+  componentDidMount() {
+    this._toNextLevel(0);
   }
 
   render() {

@@ -10,7 +10,7 @@ import GamePlay from './containers/GamePlay';
 import GameOver from './containers/GameOver';
 
 const GAME_STATE = {
-  PLAYING : "PLAYING",
+  PLAYING: "PLAYING",
   GAMEOVER: "GAMEOVER"
 }
 
@@ -20,9 +20,22 @@ export default class App extends Component {
     gameState: GAME_STATE.PLAYING
   }
 
+  _changeGameState(gameState, score) {
+    this.setState({
+      gameState,
+      score
+    });
+  }
+
   render() {
     return this.state.gameState === GAME_STATE.PLAYING
-      ? <GamePlay/>
-      : <GameOver score={this.state.score} />;
+      ? <GamePlay onGameOver={(score) => this._changeGameState(
+        GAME_STATE.GAMEOVER,
+        score
+      )} />
+      : <GameOver score={this.state.score} onRetry={() => this._changeGameState(
+        GAME_STATE.PLAYING,
+        0
+      )} />;
   }
 }

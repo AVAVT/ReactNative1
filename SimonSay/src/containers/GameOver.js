@@ -7,10 +7,13 @@ import {
 } from 'react-native';
 
 class GameOver extends Component {
-  state = {  }
+  state = {}
   render() {
     return (
-      <Text>{this.props.score}</Text>
+      <View>
+        <Text>{this.props.score}</Text>
+        <Button onPress={this.props.onRetry} title="Retry" />
+      </View>
     );
   }
 }
