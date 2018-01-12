@@ -3,11 +3,13 @@ import {
   StyleSheet,
   Text,
   View,
-  Button
+  Button,
+  Platform
 } from 'react-native';
 
 import GamePlay from './containers/GamePlay';
 import GameOver from './containers/GameOver';
+import StyleDemo from './containers/StyleDemo';
 
 const GAME_STATE = {
   PLAYING: "PLAYING",
@@ -28,6 +30,7 @@ export default class App extends Component {
   }
 
   render() {
+    // return <StyleDemo />
     return this.state.gameState === GAME_STATE.PLAYING
       ? <GamePlay onGameOver={(score) => this._changeGameState(
         GAME_STATE.GAMEOVER,
