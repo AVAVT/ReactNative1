@@ -44,6 +44,12 @@ export default class GamePlay extends Component {
     return targetInput.concat(this._randomInt(0, 4));
   }
 
+  _onLayout(width, height) {
+    this.setState({
+      styles: width > height ? stylesHorizontal : stylesVertical
+    });
+  }
+
   componentDidMount() {
     this._toNextLevel(0);
   }
@@ -51,36 +57,46 @@ export default class GamePlay extends Component {
   render() {
     const { width, height } = Dimensions.get("window");
     const gameBoardSize = Math.min(width, height);
+    const styles = this.state.styles;
 
     return (
-      <View style={styles.container}>
+      <View style={styles.container}  onLayout={this._onLayout}>
         <Text>Hello React Native!</Text>
         <Text>{this.state.score}</Text>
         <Text>{this.state.targetInput}</Text>
-        
-        <View style={{
-          width: gameBoardSize,
-          height: gameBoardSize
-        }}>
-          <View style={[styles.container, styles.row]}>
-            <ColorButton onPress={() => this._onPress(0)} background="red" />
-            <ColorButton onPress={() => this._onPress(1)} background="yellow" />
-          </View>
-          <View style={[styles.container, styles.row]}>
-            <ColorButton onPress={() => this._onPress(2)} background="blue" />
-            <ColorButton onPress={() => this._onPress(3)} background="green" />
+        <View style={{ flex: 1 }}>
+          <View style={{
+            width: gameBoardSize,
+            height: gameBoardSize
+          }}>
+            <View style={[styles.container, styles.row]}>
+              <ColorButton onPress={() => this._onPress(0)} background="red" />
+              <ColorButton onPress={() => this._onPress(1)} background="yellow" />
+            </View>
+            <View style={[styles.container, styles.row]}>
+              <ColorButton onPress={() => this._onPress(2)} background="blue" />
+              <ColorButton onPress={() => this._onPress(3)} background="green" />
+            </View>
           </View>
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
+const stylesHorizontal = StyleSheet.create({
   container: {
     flex: 1
   },
   row: {
     flexDirection: "row"
   }
-})
+});
+
+const stylesVertical = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  row: {
+    flexDirection: "row"
+  }
+});
