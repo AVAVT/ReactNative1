@@ -7,11 +7,10 @@ import {
 class ColorButton extends Component {
   render() {
     return (
-      <TouchableOpacity onPress={this.props.onPress}>
+      <TouchableOpacity style={{ flex: 1 }} onPress={this.props.onPress}>
         <View style={{
           backgroundColor: this.props.background,
-          width: 50,
-          height: 50
+          flex: 1
         }}></View>
       </TouchableOpacity>
     );
