@@ -19,18 +19,12 @@ class ColorButton extends Component {
 
 const styles = StyleSheet.create({
   touchable: {
-    flex: 1,
+    width: "50%",
+    height: "50%",
     padding: 10
   },
   colorView: {
     borderRadius: 5,
-    shadowRadius: 3,
-    shadowOffset: {
-      width: 0,
-      height: 5
-    },
-    shadowColor: "black",
-    shadowOpacity: 0.3,
     flex: 1
   }
 })
