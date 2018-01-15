@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,12 +10,25 @@ import {
 
 import ColorButton from "../components/ColorButton";
 
-export default class GamePlay extends Component {
+const PlayState = {
+  HINTING: "HINTING",
+  PLAYING: "PLAYING"
+}
+
+export default class GamePlay extends PureComponent {
   state = {
     score: 0,
     targetInput: [],
     userInputIndex: 0,
-    gameBoardSize: 0
+    gameBoardSize: 0,
+    flashIndex: -1,
+    playState: PlayState.HINTING,
+    buttonColors: [
+      "#EE4220",
+      "#B417E8",
+      "#197AFF",
+      "#95FF67"
+    ]
   }
 
   _onPress = (input) => {
@@ -39,7 +52,31 @@ export default class GamePlay extends Component {
       score,
       userInputIndex: 0,
       targetInput: this._nextLevel(this.state.targetInput)
-    })
+    }, () => {
+      this.setState({
+        playState: PlayState.HINTING
+      });
+      setTimeout(this._onButtonFlashCompleted, 1000);
+    });
+  }
+
+  _onButtonFlashCompleted = () => {
+    const { flashIndex, targetInput } = this.state;
+
+    this.setState({
+      flashIndex: -1
+    }, () => {
+      this.setState(
+        flashIndex < targetInput.length - 1
+          ? {
+            playState: PlayState.HINTING,
+            flashIndex: flashIndex + 1
+          }
+          : {
+            playState: PlayState.PLAYING
+          }
+      );
+    });
   }
 
   _nextLevel = (targetInput) => {
@@ -58,6 +95,16 @@ export default class GamePlay extends Component {
     this._toNextLevel(0);
   }
 
+  _propsForButtonIndex = (index) => {
+    return {
+      onPress: () => this._onPress(index),
+      isFlashing: this.state.targetInput[this.state.flashIndex] === index,
+      onFlashCompleted: this._onButtonFlashCompleted,
+      disabled: this.state.playState === PlayState.HINTING,
+      background: this.state.buttonColors[index]
+    }
+  }
+
   render() {
     return (
       <View style={[styles.container, styles.wrapper]}>
@@ -70,35 +117,35 @@ export default class GamePlay extends Component {
               height: this.state.gameBoardSize
             }
           ]}>
-            <ColorButton onPress={() => this._onPress(0)} background="#EE4220" />
-            <ColorButton onPress={() => this._onPress(1)} background="#B417E8" />
-            <ColorButton onPress={() => this._onPress(2)} background="#197AFF" />
-            <ColorButton onPress={() => this._onPress(3)} background="#95FF67" />
+            <ColorButton {...this._propsForButtonIndex(0) } />
+            <ColorButton {...this._propsForButtonIndex(1) } />
+            <ColorButton {...this._propsForButtonIndex(2) } />
+            <ColorButton {...this._propsForButtonIndex(3) } />
           </View>
         </View>
-      </View>
-    );
+        </View>
+        );
   }
 }
 const styles = StyleSheet.create({
-  wrapper: {
-    paddingTop: 20,
+          wrapper: {
+          paddingTop: 20,
     alignItems: "center",
     backgroundColor: "#E8C65A"
   },
   container: {
-    flex: 1
+          flex: 1
   },
   scoreText: {
-    paddingVertical: 30,
+          paddingVertical: 30,
     fontSize: 36
   },
   boardContainer: {
-    flex: 1,
+          flex: 1,
     width: "100%",
     alignItems: "center"
   },
   gameBoard: {
-    flexWrap: "wrap"
+          flexWrap: "wrap"
   }
 });

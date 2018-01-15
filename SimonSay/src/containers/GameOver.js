@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,7 +6,7 @@ import {
   Button
 } from 'react-native';
 
-class GameOver extends Component {
+class GameOver extends PureComponent {
   state = {}
   render() {
     return (

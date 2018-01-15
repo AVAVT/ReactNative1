@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   Text,
@@ -16,7 +16,7 @@ const GAME_STATE = {
   GAMEOVER: "GAMEOVER"
 }
 
-export default class App extends Component {
+export default class App extends PureComponent {
   state = {
     score: 0,
     gameState: GAME_STATE.PLAYING
