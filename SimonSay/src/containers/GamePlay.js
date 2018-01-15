@@ -70,10 +70,10 @@ export default class GamePlay extends Component {
               height: this.state.gameBoardSize
             }
           ]}>
-            <ColorButton onPress={() => this._onPress(0)} background="red" />
-            <ColorButton onPress={() => this._onPress(1)} background="yellow" />
-            <ColorButton onPress={() => this._onPress(2)} background="blue" />
-            <ColorButton onPress={() => this._onPress(3)} background="green" />
+            <ColorButton onPress={() => this._onPress(0)} background="#EE4220" />
+            <ColorButton onPress={() => this._onPress(1)} background="#B417E8" />
+            <ColorButton onPress={() => this._onPress(2)} background="#197AFF" />
+            <ColorButton onPress={() => this._onPress(3)} background="#95FF67" />
           </View>
         </View>
       </View>
@@ -83,7 +83,8 @@ export default class GamePlay extends Component {
 const styles = StyleSheet.create({
   wrapper: {
     paddingTop: 20,
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "#E8C65A"
   },
   container: {
     flex: 1
