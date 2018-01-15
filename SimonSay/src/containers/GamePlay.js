@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import ColorButton from "../components/ColorButton";
+import Sound from 'react-native-sound';
 
 const PlayState = {
   HINTING: "HINTING",
@@ -92,6 +93,16 @@ export default class GamePlay extends PureComponent {
   }
 
   componentDidMount() {
+    Sound.setCategory('Playback');
+
+    var whoosh = new Sound('pling1.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+      whoosh.play();
+    });
+    
     this._toNextLevel(0);
   }
 
@@ -123,29 +134,29 @@ export default class GamePlay extends PureComponent {
             <ColorButton {...this._propsForButtonIndex(3) } />
           </View>
         </View>
-        </View>
-        );
+      </View>
+    );
   }
 }
 const styles = StyleSheet.create({
-          wrapper: {
-          paddingTop: 20,
+  wrapper: {
+    paddingTop: 20,
     alignItems: "center",
     backgroundColor: "#E8C65A"
   },
   container: {
-          flex: 1
+    flex: 1
   },
   scoreText: {
-          paddingVertical: 30,
+    paddingVertical: 30,
     fontSize: 36
   },
   boardContainer: {
-          flex: 1,
+    flex: 1,
     width: "100%",
     alignItems: "center"
   },
   gameBoard: {
-          flexWrap: "wrap"
+    flexWrap: "wrap"
   }
 });

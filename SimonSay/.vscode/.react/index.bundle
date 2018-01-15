@@ -52011,11 +52011,11 @@ var _GamePlay = require(489                    ); // 489 = ./containers/GamePlay
 
 var _GamePlay2 = _interopRequireDefault(_GamePlay);
 
-var _GameOver = require(491                    ); // 491 = ./containers/GameOver
+var _GameOver = require(492                    ); // 492 = ./containers/GameOver
 
 var _GameOver2 = _interopRequireDefault(_GameOver);
 
-var _StyleDemo = require(492                     ); // 492 = ./containers/StyleDemo
+var _StyleDemo = require(493                     ); // 493 = ./containers/StyleDemo
 
 var _StyleDemo2 = _interopRequireDefault(_StyleDemo);
 
@@ -52128,6 +52128,10 @@ var _reactNative = require(12            ); // 12 = react-native
 var _ColorButton = require(490                        ); // 490 = ../components/ColorButton
 
 var _ColorButton2 = _interopRequireDefault(_ColorButton);
+
+var _reactNativeSound = require(491                 ); // 491 = react-native-sound
+
+var _reactNativeSound2 = _interopRequireDefault(_reactNativeSound);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -52249,6 +52253,16 @@ var GamePlay = _wrapComponent('GamePlay')(function (_PureComponent) {
   _createClass(GamePlay, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      _reactNativeSound2.default.setCategory('Playback');
+
+      var whoosh = new _reactNativeSound2.default('pling1.mp3', _reactNativeSound2.default.MAIN_BUNDLE, function (error) {
+        if (error) {
+          console.log('failed to load the sound', error);
+          return;
+        }
+        whoosh.play();
+      });
+
       this._toNextLevel(0);
     }
   }, {
@@ -52258,14 +52272,14 @@ var GamePlay = _wrapComponent('GamePlay')(function (_PureComponent) {
         _reactNative.View,
         { style: [styles.container, styles.wrapper], __source: {
             fileName: _jsxFileName,
-            lineNumber: 110
+            lineNumber: 121
           }
         },
         _react3.default.createElement(
           _reactNative.Text,
           { style: styles.scoreText, __source: {
               fileName: _jsxFileName,
-              lineNumber: 111
+              lineNumber: 122
             }
           },
           'Score: ' + this.state.score
@@ -52274,7 +52288,7 @@ var GamePlay = _wrapComponent('GamePlay')(function (_PureComponent) {
           _reactNative.View,
           { style: styles.boardContainer, onLayout: this._onLayout, __source: {
               fileName: _jsxFileName,
-              lineNumber: 112
+              lineNumber: 123
             }
           },
           _react3.default.createElement(
@@ -52284,31 +52298,31 @@ var GamePlay = _wrapComponent('GamePlay')(function (_PureComponent) {
                 height: this.state.gameBoardSize
               }], __source: {
                 fileName: _jsxFileName,
-                lineNumber: 113
+                lineNumber: 124
               }
             },
             _react3.default.createElement(_ColorButton2.default, _extends({}, this._propsForButtonIndex(0), {
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 120
+                lineNumber: 131
               }
             })),
             _react3.default.createElement(_ColorButton2.default, _extends({}, this._propsForButtonIndex(1), {
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 121
+                lineNumber: 132
               }
             })),
             _react3.default.createElement(_ColorButton2.default, _extends({}, this._propsForButtonIndex(2), {
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 122
+                lineNumber: 133
               }
             })),
             _react3.default.createElement(_ColorButton2.default, _extends({}, this._propsForButtonIndex(3), {
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 123
+                lineNumber: 134
               }
             }))
           )
@@ -52465,6 +52479,218 @@ var styles = _reactNative.StyleSheet.create({
 
 exports.default = ColorButton;
 }, 490, null, "SimonSay/src/components/ColorButton.js");
+__d(/* react-native-sound/sound.js */function(global, require, module, exports) {'use strict';
+
+var RNSound = require(12            ).NativeModules.RNSound; // 12 = react-native
+var IsAndroid = RNSound.IsAndroid;
+var IsWindows = RNSound.IsWindows;
+var resolveAssetSource = require(323                                              ); // 323 = react-native/Libraries/Image/resolveAssetSource
+var nextKey = 0;
+
+function isRelativePath(path) {
+  return !/^(\/|http(s?))/.test(path);
+}
+
+function Sound(filename, basePath, onError, options) {
+  var _this = this;
+
+  var asset = resolveAssetSource(filename);
+  if (asset) {
+    this._filename = asset.uri;
+    onError = basePath;
+  } else {
+    this._filename = basePath ? basePath + '/' + filename : filename;
+
+    if (IsAndroid && !basePath && isRelativePath(filename)) {
+      this._filename = filename.toLowerCase().replace(/\.[^.]+$/, '');
+    }
+  }
+
+  this._loaded = false;
+  this._key = nextKey++;
+  this._duration = -1;
+  this._numberOfChannels = -1;
+  this._volume = 1;
+  this._pan = 0;
+  this._numberOfLoops = 0;
+  this._speed = 1;
+  RNSound.prepare(this._filename, this._key, options || {}, function (error, props) {
+    if (props) {
+      if (typeof props.duration === 'number') {
+        _this._duration = props.duration;
+      }
+      if (typeof props.numberOfChannels === 'number') {
+        _this._numberOfChannels = props.numberOfChannels;
+      }
+    }
+    if (error === null) {
+      _this._loaded = true;
+    }
+    onError && onError(error);
+  });
+}
+
+Sound.prototype.isLoaded = function () {
+  return this._loaded;
+};
+
+Sound.prototype.play = function (onEnd) {
+  if (this._loaded) {
+    RNSound.play(this._key, function (successfully) {
+      return onEnd && onEnd(successfully);
+    });
+  } else {
+    onEnd && onEnd(false);
+  }
+  return this;
+};
+
+Sound.prototype.pause = function (callback) {
+  if (this._loaded) {
+    RNSound.pause(this._key, function () {
+      callback && callback();
+    });
+  }
+  return this;
+};
+
+Sound.prototype.stop = function (callback) {
+  if (this._loaded) {
+    RNSound.stop(this._key, function () {
+      callback && callback();
+    });
+  }
+  return this;
+};
+
+Sound.prototype.release = function () {
+  if (this._loaded) {
+    RNSound.release(this._key);
+  }
+  return this;
+};
+
+Sound.prototype.getDuration = function () {
+  return this._duration;
+};
+
+Sound.prototype.getNumberOfChannels = function () {
+  return this._numberOfChannels;
+};
+
+Sound.prototype.getVolume = function () {
+  return this._volume;
+};
+
+Sound.prototype.setVolume = function (value) {
+  this._volume = value;
+  if (this._loaded) {
+    if (IsAndroid || IsWindows) {
+      RNSound.setVolume(this._key, value, value);
+    } else {
+      RNSound.setVolume(this._key, value);
+    }
+  }
+  return this;
+};
+
+Sound.prototype.getPan = function () {
+  return this._pan;
+};
+
+Sound.prototype.setPan = function (value) {
+  if (this._loaded) {
+    RNSound.setPan(this._key, this._pan = value);
+  }
+  return this;
+};
+
+Sound.prototype.getNumberOfLoops = function () {
+  return this._numberOfLoops;
+};
+
+Sound.prototype.setNumberOfLoops = function (value) {
+  this._numberOfLoops = value;
+  if (this._loaded) {
+    if (IsAndroid || IsWindows) {
+      RNSound.setLooping(this._key, !!value);
+    } else {
+      RNSound.setNumberOfLoops(this._key, value);
+    }
+  }
+  return this;
+};
+
+Sound.prototype.setSpeed = function (value) {
+  this._setSpeed = value;
+  if (this._loaded) {
+    if (!IsWindows) {
+      RNSound.setSpeed(this._key, value);
+    }
+  }
+  return this;
+};
+
+Sound.prototype.getCurrentTime = function (callback) {
+  if (this._loaded) {
+    RNSound.getCurrentTime(this._key, callback);
+  }
+};
+
+Sound.prototype.setCurrentTime = function (value) {
+  if (this._loaded) {
+    RNSound.setCurrentTime(this._key, value);
+  }
+  return this;
+};
+
+Sound.prototype.setSpeakerphoneOn = function (value) {
+  if (IsAndroid) {
+    RNSound.setSpeakerphoneOn(this._key, value);
+  }
+};
+
+Sound.prototype.setCategory = function (value) {
+  Sound.setCategory(value, false);
+};
+
+Sound.enable = function (enabled) {
+  RNSound.enable(enabled);
+};
+
+Sound.enableInSilenceMode = function (enabled) {
+  if (!IsAndroid && !IsWindows) {
+    RNSound.enableInSilenceMode(enabled);
+  }
+};
+
+Sound.setActive = function (value) {
+  if (!IsAndroid && !IsWindows) {
+    RNSound.setActive(value);
+  }
+};
+
+Sound.setCategory = function (value) {
+  var mixWithOthers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  if (!IsAndroid && !IsWindows) {
+    RNSound.setCategory(value, mixWithOthers);
+  }
+};
+
+Sound.setMode = function (value) {
+  if (!IsAndroid && !IsWindows) {
+    RNSound.setMode(value);
+  }
+};
+
+Sound.MAIN_BUNDLE = RNSound.MainBundlePath;
+Sound.DOCUMENT = RNSound.NSDocumentDirectory;
+Sound.LIBRARY = RNSound.NSLibraryDirectory;
+Sound.CACHES = RNSound.NSCachesDirectory;
+
+module.exports = Sound;
+}, 491, null, "react-native-sound/sound.js");
 __d(/* SimonSay/src/containers/GameOver.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -52568,7 +52794,7 @@ var GameOver = _wrapComponent('GameOver')(function (_PureComponent) {
 }(_react2.PureComponent));
 
 exports.default = GameOver;
-}, 491, null, "SimonSay/src/containers/GameOver.js");
+}, 492, null, "SimonSay/src/containers/GameOver.js");
 __d(/* SimonSay/src/containers/StyleDemo.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -52701,7 +52927,7 @@ var styles = _reactNative.StyleSheet.create({
 });
 
 exports.default = StyleDemo;
-}, 492, null, "SimonSay/src/containers/StyleDemo.js");
+}, 493, null, "SimonSay/src/containers/StyleDemo.js");
 ;require(50);
 ;require(0);
 //# sourceMappingURL=index.map
