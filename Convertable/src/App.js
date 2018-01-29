@@ -1,55 +1,45 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
-  Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  Button
 } from 'react-native';
 
-import globalStyles from './Styles';
+import { Provider, connect } from 'react-redux';
+import { createStore } from 'redux';
 
-import ConvertColumn from './components/ConvertColumn';
+import ConvertScreen from './containers/ConvertScreen';
+import CategoryScreen from './containers/CategoryScreen';
 
-export default class App extends Component {
+import reducers from './reducers/';
+
+const store = createStore(reducers);
+
+const page = {
+  CATEGORY: "CATEGORY",
+  CONVERT: "CONVERT"
+}
+
+class App extends PureComponent {
   state = {
-    items: [
-      { id: 0, title: "Meter", ratio: 1 },
-      { id: 1, title: "Decimeter", ratio: 0.1 },
-      { id: 2, title: "Centimeter", ratio: 0.01 },
-      { id: 3, title: "Milimeter", ratio: 0.001 }
-    ],
-    baseValue: 0
+    currentPage: page.CONVERT
   }
 
-  _updateBaseValue = (value) => this.setState({ baseValue: value });
+  _goToCategoryScreen = () => this.setState({ currentPage: page.CATEGORY })
+  _goToConvertScreen = () => this.setState({ currentPage: page.CONVERT })
 
   render() {
     return (
-      <View style={[globalStyles.bgPrimary3, globalStyles.container, styles.appContainer]}>
-        <ConvertColumn
-          items={this.state.items}
-          baseValue={this.state.baseValue}
-          updateBaseValue={this._updateBaseValue}
-        />
-        <ConvertColumn
-          items={this.state.items}
-          baseValue={this.state.baseValue}
-          updateBaseValue={this._updateBaseValue}
-        />
-      </View>
+      <Provider store={store}>
+        {
+          this.state.currentPage === page.CONVERT
+            ? <ConvertScreen toggleScreen={this._goToCategoryScreen} />
+            : <CategoryScreen toggleScreen={this._goToConvertScreen} />
+        }
+      </Provider>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  appContainer: {
-    paddingTop: 20,
-    flexDirection: "row"
-  }
-});
+export default App;
