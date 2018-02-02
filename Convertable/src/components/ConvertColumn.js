@@ -60,9 +60,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapAppStateToProps = state => ({
-  baseValue: state.baseValue
-});
+const mapAppStateToProps = ({ baseValue }) => ({ baseValue });
 
 const mapDispatchToProps = dispatch => ({
   changeBaseValue: newValue => dispatch(createBaseValueAction(newValue))

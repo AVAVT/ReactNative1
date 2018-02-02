@@ -11,16 +11,17 @@ import globalStyles from '../Styles';
 import { categories } from '../database.json';
 import UnitSelector from '../components/UnitSelector';
 
-class CategoryScreen extends PureComponent {
-  _onChangeCategoryId = id => console.log(id);
+import { connect } from 'react-redux';
+import { createChangeCategoryAction } from '../actions';
 
+class CategoryScreen extends PureComponent {
   _keyExtractor = item => item.id;
 
   _renderItem = ({ item, index }) => (<UnitSelector
-    onChangeUnitId={this._onChangeCategoryId}
+    onChangeUnitId={this.props.changeCategory}
     item={{ title: item.name, id: item.id }}
     isEven={index % 2 === 0}
-  // isSelected={item.id === this.props.selectedId}
+    isSelected={item.id === this.props.categoryId}
   />)
 
   render() {
@@ -38,4 +39,10 @@ class CategoryScreen extends PureComponent {
   }
 }
 
-export default CategoryScreen;
+const mapAppStateToProps = ({ categoryId }) => ({ categoryId })
+
+const mapDispatchToProps = dispatch => ({
+  changeCategory: id => dispatch(createChangeCategoryAction(id))
+});
+
+export default connect(mapAppStateToProps, mapDispatchToProps)(CategoryScreen);

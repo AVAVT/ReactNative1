@@ -58644,7 +58644,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
   }(_react2.PureComponent));
 
   exports.default = App;
-},489,[109,128,12,490,501,518,525,530],"Convertable/src/App.js");
+},489,[109,128,12,490,501,518,527,528],"Convertable/src/App.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -60459,15 +60459,17 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
   var _reactNative = require(_dependencyMap[2], "react-native");
 
-  var _Styles = require(_dependencyMap[3], "../Styles");
+  var _reactRedux = require(_dependencyMap[3], "react-redux");
+
+  var _Styles = require(_dependencyMap[4], "../Styles");
 
   var _Styles2 = _interopRequireDefault(_Styles);
 
-  var _ConvertColumn = require(_dependencyMap[4], "../components/ConvertColumn");
+  var _ConvertColumn = require(_dependencyMap[5], "../components/ConvertColumn");
 
   var _ConvertColumn2 = _interopRequireDefault(_ConvertColumn);
 
-  var _database = require(_dependencyMap[5], "../database.json");
+  var _database = require(_dependencyMap[6], "../database.json");
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -60510,9 +60512,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
         args[_key] = arguments[_key];
       }
 
-      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ConvertScreen.__proto__ || Object.getPrototypeOf(ConvertScreen)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-        items: _database.categories[1].items
-      }, _temp), _possibleConstructorReturn(_this, _ret);
+      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ConvertScreen.__proto__ || Object.getPrototypeOf(ConvertScreen)).call.apply(_ref, [this].concat(args))), _this), _this.state = {}, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(ConvertScreen, [{
@@ -60547,14 +60547,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
               }
             },
             _react3.default.createElement(_ConvertColumn2.default, {
-              items: this.state.items,
+              items: this.props.category.items,
               __source: {
                 fileName: _jsxFileName,
                 lineNumber: 32
               }
             }),
             _react3.default.createElement(_ConvertColumn2.default, {
-              items: this.state.items,
+              items: this.props.category.items,
               __source: {
                 fileName: _jsxFileName,
                 lineNumber: 35
@@ -60575,8 +60575,16 @@ __d(function (global, require, module, exports, _dependencyMap) {
     }
   });
 
-  exports.default = ConvertScreen;
-},518,[109,128,12,519,520,524],"Convertable/src/containers/ConvertScreen.js");
+  var mapAppStateToProps = function mapAppStateToProps(state) {
+    return {
+      category: _database.categories.find(function (category) {
+        return category.id === state.categoryId;
+      })
+    };
+  };
+
+  exports.default = (0, _reactRedux.connect)(mapAppStateToProps)(ConvertScreen);
+},518,[109,128,12,490,519,520,526],"Convertable/src/containers/ConvertScreen.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -60747,9 +60755,10 @@ __d(function (global, require, module, exports, _dependencyMap) {
     }
   });
 
-  var mapAppStateToProps = function mapAppStateToProps(state) {
+  var mapAppStateToProps = function mapAppStateToProps(_ref2) {
+    var baseValue = _ref2.baseValue;
     return {
-      baseValue: state.baseValue
+      baseValue: baseValue
     };
   };
 
@@ -60762,12 +60771,12 @@ __d(function (global, require, module, exports, _dependencyMap) {
   };
 
   exports.default = (0, _reactRedux.connect)(mapAppStateToProps, mapDispatchToProps)(ConvertColumn);
-},520,[109,128,12,490,529,519,521,522],"Convertable/src/components/ConvertColumn.js");
+},520,[109,128,12,490,521,519,523,524],"Convertable/src/components/ConvertColumn.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.createBaseValueAction = undefined;
+  exports.createChangeCategoryAction = exports.createBaseValueAction = undefined;
 
   var _types = require(_dependencyMap[0], "./types");
 
@@ -60777,13 +60786,21 @@ __d(function (global, require, module, exports, _dependencyMap) {
       payload: newValue
     };
   };
-},529,[527],"Convertable/src/actions/index.js");
+
+  var createChangeCategoryAction = exports.createChangeCategoryAction = function createChangeCategoryAction(newId) {
+    return {
+      type: _types.CHANGE_CATEGORY,
+      payload: newId
+    };
+  };
+},521,[522],"Convertable/src/actions/index.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   var CHANGE_BASE_VALUE = exports.CHANGE_BASE_VALUE = "CHANGE_BASE_VALUE";
-},527,[],"Convertable/src/actions/types.js");
+  var CHANGE_CATEGORY = exports.CHANGE_CATEGORY = "CHANGE_CATEGORY";
+},522,[],"Convertable/src/actions/types.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -60920,7 +60937,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
   });
 
   exports.default = UnitDisplay;
-},521,[109,128,12,519],"Convertable/src/components/UnitDisplay.js");
+},523,[109,128,12,519],"Convertable/src/components/UnitDisplay.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -61025,7 +61042,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
   }(_react2.PureComponent));
 
   exports.default = UnitList;
-},522,[109,128,12,523],"Convertable/src/components/UnitList.js");
+},524,[109,128,12,525],"Convertable/src/components/UnitList.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -61133,7 +61150,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
   });
 
   exports.default = UnitSelector;
-},523,[109,128,12,519],"Convertable/src/components/UnitSelector.js");
+},525,[109,128,12,519],"Convertable/src/components/UnitSelector.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   module.exports = {
     "categories": [{
@@ -61178,7 +61195,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
       }]
     }]
   };
-},524,[],"Convertable/src/database.json");
+},526,[],"Convertable/src/database.json");
 __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -61207,6 +61224,10 @@ __d(function (global, require, module, exports, _dependencyMap) {
   var _UnitSelector = require(_dependencyMap[5], "../components/UnitSelector");
 
   var _UnitSelector2 = _interopRequireDefault(_UnitSelector);
+
+  var _reactRedux = require(_dependencyMap[6], "react-redux");
+
+  var _actions = require(_dependencyMap[7], "../actions");
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -61249,23 +61270,22 @@ __d(function (global, require, module, exports, _dependencyMap) {
         args[_key] = arguments[_key];
       }
 
-      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CategoryScreen.__proto__ || Object.getPrototypeOf(CategoryScreen)).call.apply(_ref, [this].concat(args))), _this), _this._onChangeCategoryId = function (id) {
-        return console.log(id);
-      }, _this._keyExtractor = function (item) {
+      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CategoryScreen.__proto__ || Object.getPrototypeOf(CategoryScreen)).call.apply(_ref, [this].concat(args))), _this), _this._keyExtractor = function (item) {
         return item.id;
       }, _this._renderItem = function (_ref2) {
         var item = _ref2.item,
             index = _ref2.index;
         return _react3.default.createElement(_UnitSelector2.default, {
-          onChangeUnitId: _this._onChangeCategoryId,
+          onChangeUnitId: _this.props.changeCategory,
           item: {
             title: item.name,
             id: item.id
           },
           isEven: index % 2 === 0,
+          isSelected: item.id === _this.props.categoryId,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 19
+            lineNumber: 20
           }
         });
       }, _temp), _possibleConstructorReturn(_this, _ret);
@@ -61282,7 +61302,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 28
+              lineNumber: 29
             }
           },
           _react3.default.createElement(_reactNative.Button, {
@@ -61290,7 +61310,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
             onPress: this.props.toggleScreen,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 29
+              lineNumber: 30
             }
           }),
           _react3.default.createElement(_reactNative.FlatList, {
@@ -61302,7 +61322,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
             keyExtractor: this._keyExtractor,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 30
+              lineNumber: 31
             }
           })
         );
@@ -61312,23 +61332,23 @@ __d(function (global, require, module, exports, _dependencyMap) {
     return CategoryScreen;
   }(_react2.PureComponent));
 
-  exports.default = CategoryScreen;
-},525,[109,128,12,519,524,523],"Convertable/src/containers/CategoryScreen.js");
-__d(function (global, require, module, exports, _dependencyMap) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  var _database = require(_dependencyMap[0], "../database.json");
-
-  var _types = require(_dependencyMap[1], "../actions/types");
-
-  exports.default = function () {
-    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    var action = arguments[1];
-    return action.type === _types.CHANGE_BASE_VALUE ? action.payload : state;
+  var mapAppStateToProps = function mapAppStateToProps(_ref3) {
+    var categoryId = _ref3.categoryId;
+    return {
+      categoryId: categoryId
+    };
   };
-},526,[524,527],"Convertable/src/reducers/baseValueReducer.js");
+
+  var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+    return {
+      changeCategory: function changeCategory(id) {
+        return dispatch((0, _actions.createChangeCategoryAction)(id));
+      }
+    };
+  };
+
+  exports.default = (0, _reactRedux.connect)(mapAppStateToProps, mapDispatchToProps)(CategoryScreen);
+},527,[109,128,12,519,526,525,490,521],"Convertable/src/containers/CategoryScreen.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -61348,9 +61368,9 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
   exports.default = reducers = (0, _redux.combineReducers)({
     baseValue: _baseValueReducer2.default,
-    category: _categoryReducer2.default
+    categoryId: _categoryReducer2.default
   });
-},530,[501,526,531],"Convertable/src/reducers/index.js");
+},528,[501,529,530],"Convertable/src/reducers/index.js");
 __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -61358,12 +61378,29 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
   var _database = require(_dependencyMap[0], "../database.json");
 
+  var _types = require(_dependencyMap[1], "../actions/types");
+
+  exports.default = function () {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    var action = arguments[1];
+    return action.type === _types.CHANGE_BASE_VALUE ? action.payload : state;
+  };
+},529,[526,522],"Convertable/src/reducers/baseValueReducer.js");
+__d(function (global, require, module, exports, _dependencyMap) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _database = require(_dependencyMap[0], "../database.json");
+
+  var _types = require(_dependencyMap[1], "../actions/types");
+
   exports.default = categoryReducer = function categoryReducer() {
     var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
     var action = arguments[1];
-    return action.type === "CHANGE_CATEGORY_ID" ? action.payload : state;
+    return action.type === _types.CHANGE_CATEGORY ? action.payload : state;
   };
-},531,[524],"Convertable/src/reducers/categoryReducer.js");
+},530,[526,522],"Convertable/src/reducers/categoryReducer.js");
 require(23);
 require(11);
 //# sourceMappingURL=index.map

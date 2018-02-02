@@ -13,6 +13,8 @@ import {
   Button
 } from 'react-native';
 
+import { connect } from 'react-redux';
+
 import globalStyles from '../Styles';
 
 import ConvertColumn from '../components/ConvertColumn';
@@ -20,9 +22,7 @@ import ConvertColumn from '../components/ConvertColumn';
 import { categories } from '../database.json';
 
 class ConvertScreen extends Component {
-  state = {
-    items: categories[1].items
-  }
+  state = {}
 
   render() {
     return (
@@ -30,10 +30,10 @@ class ConvertScreen extends Component {
         <Button title="Toggle Screen" onPress={this.props.toggleScreen} />
         <View style={[globalStyles.bgPrimary3, globalStyles.container, styles.appContainer]}>
           <ConvertColumn
-            items={this.state.items}
+            items={this.props.category.items}
           />
           <ConvertColumn
-            items={this.state.items}
+            items={this.props.category.items}
           />
         </View>
       </View>
@@ -48,4 +48,8 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ConvertScreen;
+const mapAppStateToProps = state => ({
+  category: categories.find(category => category.id === state.categoryId)
+})
+
+export default connect(mapAppStateToProps)(ConvertScreen);

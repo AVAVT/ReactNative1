@@ -5,5 +5,5 @@ import categoryReducer from './categoryReducer';
 
 export default reducers = combineReducers({
   baseValue: baseValueReducer,
-  category: categoryReducer
+  categoryId: categoryReducer
 });
