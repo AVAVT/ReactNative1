@@ -22,20 +22,38 @@ import ConvertColumn from '../components/ConvertColumn';
 import { categories } from '../database.json';
 
 class ConvertScreen extends Component {
-  state = {}
+  static navigationOptions = ({ navigation }) => ({
+    title: navigation.state.params ? navigation.state.params.title : "",
+    headerRight: (
+      <Button 
+        title="Categories" 
+        onPress={() => navigation.navigate("CategoryScreen")} 
+      />
+    )
+  });
+  componentDidMount() {
+    this.props.navigation.setParams({
+      title: this.props.category.name
+    });
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.category.name !== this.props.category.name){
+      this.props.navigation.setParams({
+        title: nextProps.category.name
+      });
+    }
+  }
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <Button title="Toggle Screen" onPress={this.props.toggleScreen} />
-        <View style={[globalStyles.bgPrimary3, globalStyles.container, styles.appContainer]}>
-          <ConvertColumn
-            items={this.props.category.items}
-          />
-          <ConvertColumn
-            items={this.props.category.items}
-          />
-        </View>
+      <View style={[globalStyles.bgPrimary3, globalStyles.container, styles.appContainer]}>
+        <ConvertColumn
+          items={this.props.category.items}
+        />
+        <ConvertColumn
+          items={this.props.category.items}
+        />
       </View>
     );
   }
@@ -43,7 +61,6 @@ class ConvertScreen extends Component {
 
 const styles = StyleSheet.create({
   appContainer: {
-    paddingTop: 20,
     flexDirection: "row"
   }
 });
