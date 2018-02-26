@@ -32,10 +32,16 @@ class ConvertColumn extends PureComponent {
     );
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.items.find(item => item.id === this.state.currentUnitId)) {
+      this.setState({ currentUnitId: 0 });
+    }
+  }
+
   render() {
-    const currentItem = this.props.items.filter(
+    const currentItem = this.props.items.find(
       item => item.id === this.state.currentUnitId
-    )[0];
+    );
 
     return (
       <View style={[styles.column]}>
