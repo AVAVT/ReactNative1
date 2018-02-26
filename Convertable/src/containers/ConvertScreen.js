@@ -19,8 +19,6 @@ import globalStyles from '../Styles';
 
 import ConvertColumn from '../components/ConvertColumn';
 
-import { categories } from '../database.json';
-
 class ConvertScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params ? navigation.state.params.title : "",
@@ -66,7 +64,7 @@ const styles = StyleSheet.create({
 });
 
 const mapAppStateToProps = state => ({
-  category: categories.find(category => category.id === state.categoryId)
+  category: state.categories.find(category => category.id === state.categoryId)
 })
 
 export default connect(mapAppStateToProps)(ConvertScreen);

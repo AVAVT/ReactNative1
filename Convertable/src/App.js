@@ -9,8 +9,10 @@ import {
 
 import { Provider, connect } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 
 import reducers from './reducers/';
+import { currencyRequestAction } from './actions';
 
 import { AppNavigation } from './AppNavigation';
 
@@ -19,9 +21,9 @@ const persistData = store => next => action => {
   asyncSaveAppState(store.getState());
 }
 
-const asyncSaveAppState = async ({ baseValue, categoryId }) => {
+const asyncSaveAppState = async ({ baseValue, categoryId, categories }) => {
   try {
-    await AsyncStorage.setItem("@appState", JSON.stringify({ baseValue, categoryId }));
+    await AsyncStorage.setItem("@appState", JSON.stringify({ baseValue, categoryId, categories }));
   }
   catch (err) {
     console.error(err);
@@ -44,9 +46,9 @@ class App extends PureComponent {
       store: createStore(
         reducers,
         JSON.parse(savedState) || {},
-        applyMiddleware(persistData)
+        applyMiddleware(persistData, thunk)
       )
-    })
+    }, () => { this.state.store.dispatch(currencyRequestAction()) });
   }
 
   render() {

@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 
 import globalStyles from '../Styles';
-import { categories } from '../database.json';
 import UnitSelector from '../components/UnitSelector';
 
 import { connect } from 'react-redux';
@@ -23,7 +22,7 @@ class CategoryScreen extends PureComponent {
     this.props.changeCategory(id);
     this.props.navigation.goBack();
   }
-  
+
   _keyExtractor = item => item.id;
 
   _renderItem = ({ item, index }) => (<UnitSelector
@@ -37,7 +36,7 @@ class CategoryScreen extends PureComponent {
     return (
       <FlatList
         style={[globalStyles.bgPrimary3, { flex: 1 }]}
-        data={categories}
+        data={this.props.categories}
         renderItem={this._renderItem}
         keyExtractor={this._keyExtractor}
       />
@@ -45,7 +44,7 @@ class CategoryScreen extends PureComponent {
   }
 }
 
-const mapAppStateToProps = ({ categoryId }) => ({ categoryId })
+const mapAppStateToProps = ({ categoryId, categories }) => ({ categoryId, categories })
 
 const mapDispatchToProps = dispatch => ({
   changeCategory: id => dispatch(createChangeCategoryAction(id))
