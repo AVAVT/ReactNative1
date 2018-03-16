@@ -9,7 +9,16 @@ import {
 
 import { connect } from 'react-redux';
 
-import { createChangeUsernameAction } from '../actions';
+import {
+  createChangeEmailAction,
+  register,
+  login
+} from '../actions';
+
+const screenType = {
+  LOGIN: "Login",
+  REGISTER: "Register"
+}
 
 class LoginScreen extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
@@ -18,44 +27,97 @@ class LoginScreen extends PureComponent {
 
   state = {
     buttonDisabled: true,
-    username: this.props.username
+    email: this.props.email,
+    screenType: screenType.LOGIN,
+    otherScreenType: screenType.REGISTER
   }
 
-  _onChange = (text) => {
+  componentWillReceiveProps = (props) => {
+    if (props.loginStatus.status === "success") {
+      this.props.navigation.navigate("ChatScreen");
+    }
+  }
+
+  _onChangeEmail = (text) => {
     this.setState({
-      username: text,
-      buttonDisabled: text.length <= 0
+      email: text
+    });
+  }
+
+  _onChangePassword = (text) => {
+    this.setState({
+      password: text
+    })
+  }
+
+  _changeScreen = () => {
+    this.setState({
+      screenType: this.state.screenType === screenType.LOGIN ? screenType.REGISTER : screenType.LOGIN,
+      otherScreenType: this.state.screenType === screenType.LOGIN ? screenType.LOGIN : screenType.REGISTER,
+    })
+  }
+
+  _submit = () => {
+    this.state.screenType === screenType.LOGIN ? this._login() : this._register();
+  }
+
+  _register = () => {
+    this.props.register({
+      email: this.state.email,
+      password: this.state.password
     });
   }
 
   _login = () => {
-    this.props.changeUsername(this.state.username);
-    this.props.navigation.navigate("ChatScreen");
+    this.props.login({
+      email: this.state.email,
+      password: this.state.password
+    });
   }
 
   render() {
+    const buttonDisabled = !(this.state.email && this.state.password);
     return (
-      <View style={{ flex: 1, paddingHorizontal: 10, paddingBottom: 150, justifyContent: "center" }}>
+      <View style={{ flex: 1, paddingHorizontal: 10, paddingBottom: 150, alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ fontSize: 24 }}>{this.state.screenType}</Text>
         <TextInput
-          onChangeText={this._onChange}
+          onChangeText={this._onChangeEmail}
           autoFocus={true}
-          value={this.state.username}
+          value={this.state.email}
+          placeholder="Email"
           style={{
+            width: "100%",
+            paddingVertical: 5,
             fontSize: 20,
             borderBottomColor: "#777777",
             borderBottomWidth: 1
           }}
         />
-        <Button title="Login" disabled={this.state.buttonDisabled} onPress={this._login} />
+        <TextInput
+          onChangeText={this._onChangePassword}
+          value={this.state.password}
+          placeholder="Password"
+          secureTextEntry
+          style={{
+            width: "100%",
+            paddingVertical: 5,
+            fontSize: 20,
+            borderBottomColor: "#777777",
+            borderBottomWidth: 1
+          }}
+        />
+        <Button title={this.state.screenType} disabled={buttonDisabled} onPress={this._submit} />
+        <Button title={this.state.otherScreenType} onPress={this._changeScreen} />
       </View>
     );
   }
 }
 
-const mapAppStateToProps = ({ username }) => ({ username })
+const mapAppStateToProps = ({ loginStatus }) => ({ username: loginStatus ? loginStatus.username : "", loginStatus })
 
 const mapDispatchToProps = dispatch => ({
-  changeUsername: username => dispatch(createChangeUsernameAction(username))
+  login: ({ email, password }) => dispatch(login({ email, password })),
+  register: ({ email, password }) => dispatch(register({ email, password }))
 })
 
 export default connect(mapAppStateToProps, mapDispatchToProps)(LoginScreen);

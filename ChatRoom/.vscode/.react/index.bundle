@@ -13917,7 +13917,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   exports.version = {
     major: 0,
     minor: 54,
-    patch: 0,
+    patch: 1,
     prerelease: null
   };
 },41,[],"ReactNativeVersion");
@@ -25059,7 +25059,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   var ReactFeatureFlags = {
     debugRenderPhaseSideEffects: false,
     debugRenderPhaseSideEffectsForStrictMode: false,
-    warnAboutDeprecatedLifecycles: true
+    warnAboutDeprecatedLifecycles: false
   };
   module.exports = ReactFeatureFlags;
 },123,[],"ReactFeatureFlags");
@@ -60492,11 +60492,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }
 
     _createClass(App, [{
-      key: "componentDidMount",
-      value: function componentDidMount() {
-        store.dispatch((0, _actions.login)());
-      }
-    }, {
       key: "render",
       value: function render() {
         return _react3.default.createElement(
@@ -60505,13 +60500,13 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             store: store,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 36
+              lineNumber: 32
             }
           },
           _react3.default.createElement(_AppNavigation.AppNavigation, {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 37
+              lineNumber: 33
             }
           })
         );
@@ -62364,14 +62359,19 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _usernameReducer2 = _interopRequireDefault(_usernameReducer);
 
+  var _loginStatusReducer = _require(_dependencyMap[4], "./loginStatusReducer");
+
+  var _loginStatusReducer2 = _interopRequireDefault(_loginStatusReducer);
+
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   exports.default = reducers = (0, _redux.combineReducers)({
+    loginStatus: _loginStatusReducer2.default,
     username: _usernameReducer2.default,
     messages: _messagesReducer2.default,
     nav: _AppNavigation.navigationReducer
   });
-},523,[505,524,684,685],"src/reducers/index.js");
+},523,[505,524,684,685,686],"src/reducers/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -75055,7 +75055,13 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       }
 
       return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ChatScreen.__proto__ || Object.getPrototypeOf(ChatScreen)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-        scrollToEnd: false
+        sendMessage: false
+      }, _this.onSendMessage = function () {
+        _this.setState({
+          sendMessage: true
+        }, _this.setState({
+          sendMessage: false
+        }));
       }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -75072,7 +75078,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             keyboardVerticalOffset: 65,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 24
+              lineNumber: 28
             }
           },
           _react3.default.createElement(
@@ -75085,19 +75091,21 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               },
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 29
+                lineNumber: 33
               }
             },
             _react3.default.createElement(_MessageList2.default, {
+              scrollToEnd: this.state.sendMessage,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 30
+                lineNumber: 34
               }
             }),
             _react3.default.createElement(_ChatBox2.default, {
+              onSendMessage: this.onSendMessage,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 31
+                lineNumber: 35
               }
             })
           )
@@ -75196,10 +75204,19 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }
 
     _createClass(MessageList, [{
+      key: "componentWillReceiveProps",
+      value: function componentWillReceiveProps(nextProps) {
+        if (nextProps.scrollToEnd) this.list.scrollToEnd();
+      }
+    }, {
       key: "render",
       value: function render() {
+        var _this2 = this;
+
         return _react3.default.createElement(_reactNative.FlatList, {
-          ref: "list",
+          ref: function ref(p) {
+            return _this2.list = p;
+          },
           data: this.props.messages,
           renderItem: this._renderItem,
           keyExtractor: this._keyExtractor,
@@ -75208,7 +75225,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 22
+            lineNumber: 26
           }
         });
       }
@@ -79556,6 +79573,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             text: null
           });
         }
+
+        _this.props.onSendMessage();
       }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -79575,7 +79594,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 37
+              lineNumber: 38
             }
           },
           _react3.default.createElement(_reactNative.TextInput, {
@@ -79590,7 +79609,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             placeholder: "Enter Message...",
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 47
+              lineNumber: 48
             }
           }),
           _react3.default.createElement(_reactNative.Button, {
@@ -79598,7 +79617,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             onPress: this._submit,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 53
+              lineNumber: 54
             }
           })
         );
@@ -79609,9 +79628,9 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }(_react2.PureComponent));
 
   var mapAppStateToProps = function mapAppStateToProps(_ref2) {
-    var username = _ref2.username;
+    var loginStatus = _ref2.loginStatus;
     return {
-      username: username
+      username: loginStatus.username
     };
   };
 
@@ -79631,7 +79650,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.login = exports.fetchMessages = exports.receiveMessage = exports.createSendMessageAction = exports.createChangeUsernameAction = undefined;
+  exports.register = exports.login = exports.fetchMessages = exports.receiveMessage = exports.createSendMessageAction = exports.createChangeUsernameAction = undefined;
 
   var _types = _require(_dependencyMap[0], "./types");
 
@@ -79700,6 +79719,20 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     };
   };
 
+  var createLoginSuccessAction = function createLoginSuccessAction(username) {
+    return {
+      type: _types.LOGIN_SUCCESS,
+      payload: username
+    };
+  };
+
+  var createLoginErrorAction = function createLoginErrorAction(error) {
+    return {
+      type: _types.LOGIN_ERROR,
+      payload: error
+    };
+  };
+
   var receiveMessage = exports.receiveMessage = function receiveMessage(message) {
     return function (dispatch) {
       dispatch(addMessage(message));
@@ -79717,13 +79750,36 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     };
   };
 
-  var login = exports.login = function login() {
+  var login = exports.login = function login(_ref) {
+    var email = _ref.email,
+        password = _ref.password;
     return function (dispatch) {
-      _reactNativeFirebase2.default.auth().signInAnonymouslyAndRetrieveData().then(function (credential) {
-        if (credential) {
-          console.log('default app user ->', credential);
-          dispatch(fetchMessages());
-        }
+      _reactNativeFirebase2.default.auth().signInAndRetrieveDataWithEmailAndPassword(email, password).then(function (user) {
+        dispatch(createLoginSuccessAction(email));
+        dispatch(fetchMessages());
+      }).catch(function (error) {
+        var code = error.code,
+            message = error.message;
+        dispatch(createLoginErrorAction(error));
+        console.error(code);
+        console.error(message);
+      });
+    };
+  };
+
+  var register = exports.register = function register(_ref2) {
+    var email = _ref2.email,
+        password = _ref2.password;
+    return function (dispatch) {
+      _reactNativeFirebase2.default.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password).then(function (user) {
+        dispatch(createLoginSuccessAction(email));
+        dispatch(fetchMessages());
+      }).catch(function (error) {
+        var code = error.code,
+            message = error.message;
+        dispatch(createLoginErrorAction(error));
+        console.error(code);
+        console.error(message);
       });
     };
   };
@@ -79737,6 +79793,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   var MESSAGE_SEND_SUCCESS = exports.MESSAGE_SEND_SUCCESS = "MESSAGE_SEND_SUCCESS";
   var MESSAGE_SEND_ERROR = exports.MESSAGE_SEND_ERROR = "MESSAGE_SEND_ERROR";
   var MESSAGE_ADD = exports.MESSAGE_ADD = "MESSAGE_ADD";
+  var LOGIN_SUCCESS = exports.LOGIN_SUCCESS = "LOGIN_SUCCESS";
+  var LOGIN_ERROR = exports.LOGIN_ERROR = "LOGIN_ERROR";
 },610,[],"src/actions/types.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
@@ -87679,6 +87737,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     };
   }
 
+  var screenType = {
+    LOGIN: "Login",
+    REGISTER: "Register"
+  };
+
   var LoginScreen = _wrapComponent("LoginScreen")((_temp2 = _class = function (_PureComponent) {
     _inherits(LoginScreen, _PureComponent);
 
@@ -87695,22 +87758,45 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
       return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = LoginScreen.__proto__ || Object.getPrototypeOf(LoginScreen)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
         buttonDisabled: true,
-        username: _this.props.username
-      }, _this._onChange = function (text) {
+        email: _this.props.email,
+        screenType: screenType.LOGIN,
+        otherScreenType: screenType.REGISTER
+      }, _this.componentWillReceiveProps = function (props) {
+        if (props.loginStatus.status === "success") {
+          _this.props.navigation.navigate("ChatScreen");
+        }
+      }, _this._onChangeEmail = function (text) {
         _this.setState({
-          username: text,
-          buttonDisabled: text.length <= 0
+          email: text
+        });
+      }, _this._onChangePassword = function (text) {
+        _this.setState({
+          password: text
+        });
+      }, _this._changeScreen = function () {
+        _this.setState({
+          screenType: _this.state.screenType === screenType.LOGIN ? screenType.REGISTER : screenType.LOGIN,
+          otherScreenType: _this.state.screenType === screenType.LOGIN ? screenType.LOGIN : screenType.REGISTER
+        });
+      }, _this._submit = function () {
+        _this.state.screenType === screenType.LOGIN ? _this._login() : _this._register();
+      }, _this._register = function () {
+        _this.props.register({
+          email: _this.state.email,
+          password: _this.state.password
         });
       }, _this._login = function () {
-        _this.props.changeUsername(_this.state.username);
-
-        _this.props.navigation.navigate("ChatScreen");
+        _this.props.login({
+          email: _this.state.email,
+          password: _this.state.password
+        });
       }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(LoginScreen, [{
       key: "render",
       value: function render() {
+        var buttonDisabled = !(this.state.email && this.state.password);
         return _react3.default.createElement(
           _reactNative.View,
           {
@@ -87718,34 +87804,76 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               flex: 1,
               paddingHorizontal: 10,
               paddingBottom: 150,
+              alignItems: "center",
               justifyContent: "center"
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 38
+              lineNumber: 81
             }
           },
+          _react3.default.createElement(
+            _reactNative.Text,
+            {
+              style: {
+                fontSize: 24
+              },
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 82
+              }
+            },
+            this.state.screenType
+          ),
           _react3.default.createElement(_reactNative.TextInput, {
-            onChangeText: this._onChange,
+            onChangeText: this._onChangeEmail,
             autoFocus: true,
-            value: this.state.username,
+            value: this.state.email,
+            placeholder: "Email",
             style: {
+              width: "100%",
+              paddingVertical: 5,
               fontSize: 20,
               borderBottomColor: "#777777",
               borderBottomWidth: 1
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 39
+              lineNumber: 83
+            }
+          }),
+          _react3.default.createElement(_reactNative.TextInput, {
+            onChangeText: this._onChangePassword,
+            value: this.state.password,
+            placeholder: "Password",
+            secureTextEntry: true,
+            style: {
+              width: "100%",
+              paddingVertical: 5,
+              fontSize: 20,
+              borderBottomColor: "#777777",
+              borderBottomWidth: 1
+            },
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 96
             }
           }),
           _react3.default.createElement(_reactNative.Button, {
-            title: "Login",
-            disabled: this.state.buttonDisabled,
-            onPress: this._login,
+            title: this.state.screenType,
+            disabled: buttonDisabled,
+            onPress: this._submit,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 49
+              lineNumber: 109
+            }
+          }),
+          _react3.default.createElement(_reactNative.Button, {
+            title: this.state.otherScreenType,
+            onPress: this._changeScreen,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 110
             }
           })
         );
@@ -87761,16 +87889,30 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }, _temp2));
 
   var mapAppStateToProps = function mapAppStateToProps(_ref3) {
-    var username = _ref3.username;
+    var loginStatus = _ref3.loginStatus;
     return {
-      username: username
+      username: loginStatus ? loginStatus.username : "",
+      loginStatus: loginStatus
     };
   };
 
   var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     return {
-      changeUsername: function changeUsername(username) {
-        return dispatch((0, _actions.createChangeUsernameAction)(username));
+      login: function login(_ref4) {
+        var email = _ref4.email,
+            password = _ref4.password;
+        return dispatch((0, _actions.login)({
+          email: email,
+          password: password
+        }));
+      },
+      register: function register(_ref5) {
+        var email = _ref5.email,
+            password = _ref5.password;
+        return dispatch((0, _actions.register)({
+          email: email,
+          password: password
+        }));
       }
     };
   };
@@ -87805,5 +87947,24 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     return action.type === _types.USERNAME_CHANGED ? action.payload : state;
   };
 },685,[610],"src/reducers/usernameReducer.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _types = _require(_dependencyMap[0], "../actions/types");
+
+  exports.default = messagesReducer = function messagesReducer() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var action = arguments[1];
+    return action.type === _types.LOGIN_SUCCESS ? {
+      status: "success",
+      username: action.payload
+    } : action.type === _types.LOGIN_ERROR ? {
+      status: "error",
+      error: action.payload
+    } : state;
+  };
+},686,[610],"src/reducers/loginStatusReducer.js");
 require(23);
 require(11);//# sourceMappingURL=index.map

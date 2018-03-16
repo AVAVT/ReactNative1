@@ -3,7 +3,9 @@ import {
   MESSAGE_SEND_LOADING,
   MESSAGE_SEND_SUCCESS,
   MESSAGE_SEND_ERROR,
-  MESSAGE_ADD
+  MESSAGE_ADD,
+  LOGIN_SUCCESS,
+  LOGIN_ERROR
 } from './types';
 
 import firebase from 'react-native-firebase';
@@ -55,28 +57,57 @@ export const createSendMessageAction = (text, username) => dispatch => {
   newMsgRef.set(msg);
 }
 
+const createLoginSuccessAction = (username) => ({
+  type: LOGIN_SUCCESS,
+  payload: username
+});
+
+const createLoginErrorAction = (error) => ({
+  type: LOGIN_ERROR,
+  payload: error
+});
+
 export const receiveMessage = (message) => dispatch => {
   dispatch(addMessage(message));
 }
 
 export const fetchMessages = () => (dispatch) => {
   const queryRef = firebase.database().ref('messages').orderByChild('created');
-  
+
   queryRef.limitToLast(25).on('child_added', function (snap) {
     const message = snap.val() || {};
     message && dispatch(receiveMessage(message));
   });
 }
 
-export const login = () => {
+export const login = ({ email, password }) => {
   return function (dispatch) {
-    firebase.auth()
-      .signInAnonymouslyAndRetrieveData()
-      .then(credential => {
-        if (credential) {
-          console.log('default app user ->', credential);
-          dispatch(fetchMessages());
-        }
+    firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password)
+      .then((user) => {
+        dispatch(createLoginSuccessAction(email));
+        dispatch(fetchMessages());
+      })
+      .catch((error) => {
+        const { code, message } = error;
+        dispatch(createLoginErrorAction(error));
+        console.error(code);
+        console.error(message);
+      });
+  }
+}
+
+export const register = ({ email, password }) => {
+  return function (dispatch) {
+    firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password)
+      .then((user) => {
+        dispatch(createLoginSuccessAction(email));
+        dispatch(fetchMessages());
+      })
+      .catch((error) => {
+        const { code, message } = error;
+        dispatch(createLoginErrorAction(error));
+        console.error(code);
+        console.error(message);
       });
   }
 }

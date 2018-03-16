@@ -18,9 +18,13 @@ class MessageList extends PureComponent {
 
   _renderItem = ({ item }) => <ChatMessage message={item} />
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.scrollToEnd) this.list.scrollToEnd();
+  }
+
   render() {
     return (<FlatList
-      ref="list"
+      ref={p => this.list = p}
       data={this.props.messages}
       renderItem={this._renderItem}
       keyExtractor={this._keyExtractor}

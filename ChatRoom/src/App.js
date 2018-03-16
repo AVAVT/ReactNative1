@@ -27,10 +27,6 @@ class App extends PureComponent {
     isLoading: true
   }
 
-  componentDidMount() {
-    store.dispatch(login());
-  }
-
   render() {
     return (
       <Provider store={store}>

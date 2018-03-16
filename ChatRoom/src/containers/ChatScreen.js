@@ -16,15 +16,25 @@ class ChatScreen extends PureComponent {
   });
 
   state = {
-    scrollToEnd: false
+    sendMessage: false
+  }
+
+  onSendMessage = () => {
+    this.setState({ sendMessage: true }, this.setState({ sendMessage: false }));
   }
 
   render() {
     return (
-      <View style={{ flex: 1, paddingHorizontal: 10, paddingVertical: 5 }}>
-        <MessageList />
-        <ChatBox />
-      </View>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior="padding"
+        keyboardVerticalOffset={65}
+      >
+        <View style={{ flex: 1, paddingHorizontal: 10, paddingVertical: 5 }}>
+          <MessageList scrollToEnd={this.state.sendMessage} />
+          <ChatBox onSendMessage={this.onSendMessage} />
+        </View>
+      </KeyboardAvoidingView>
     )
   }
 }

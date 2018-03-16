@@ -29,6 +29,8 @@ class ChatBox extends PureComponent {
         text: null
       });
     }
+
+    this.props.onSendMessage();
   }
 
   render() {
@@ -55,7 +57,7 @@ class ChatBox extends PureComponent {
   }
 }
 
-const mapAppStateToProps = ({ username }) => ({ username })
+const mapAppStateToProps = ({ loginStatus }) => ({ username: loginStatus.username })
 const mapDispatchToProps = dispatch => ({
   sendMessage: ({ text, username }) => dispatch(createSendMessageAction(text, username))
 })
